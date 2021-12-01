@@ -1,0 +1,490 @@
+
+:root {
+  --background-color: #ffffff;
+  --input-background: #f3f3f3;
+  --add-item-text-color: #444444;
+  --font-color: #1a1a1a;
+  --reg-box-shadow: 0 .2em .4em rgb(0 0 0 / 10%), 0 0 .8em rgb(0 0 0 / 10%);
+  --focus-box-shadow: 0 .25em .75em rgb(0 0 0 / 20%), 0 0 .5em rgb(0 0 0 / 20%);
+  --input-box-shadow: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #1c1c1c;
+    --input-background: #171717;
+    --add-item-text-color: #c9c9c9;
+    --font-color: rgb(82.55% 84.13% 84.13%);
+    --reg-box-shadow: 0 .2em .4em rgb(0 0 0 / 20%), 0 0 .8em rgb(0 0 0 / 20%);
+    --focus-box-shadow: 0 .25em .75em rgb(0 0 0 / 40%), 0 0 .5em rgb(0 0 0 / 40%);
+    --input-box-shadow: 0 .025rem 0.5rem rgb(0 0 0 / 20%);
+  }
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  touch-action: manipulation;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  font-family: "Lato", sans-serif;
+  overflow-y: scroll;
+  color: var(--font-color);
+  position: relative;
+  background-color: var(--background-color);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+body.no-scroll {
+  overflow-y: hidden;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+h1,
+h2,
+input#total,
+:disabled {
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+:disabled {
+  opacity: .5;
+}
+
+h1 {
+  font-weight: 900;
+  font-style: italic;
+}
+
+h2::after {
+  content: attr(data-price);
+  font-size: .7em;
+  color: currentColor;
+  opacity: .85;
+  margin-left: .25em;
+}
+
+.container {
+  width: 75vw;
+  max-width: 30rem;
+  position: relative;
+  padding-top: max(2rem, calc(env(safe-area-inset-top) + 1rem));
+  padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  -webkit-transition: filter 250ms ease-out;
+  transition: filter 250ms ease-out;
+}
+
+[data-adding='true'] ~ .container {
+  filter: blur(10px);
+}
+
+.order:not(.show) {
+  margin-top: calc(-1rem * var(--num-of-items) * 6.1225 - 1rem) !important;
+  opacity: 0;
+}
+
+li {
+  position: relative;
+}
+
+li,
+.total,
+.complete,
+.edit,
+.add,
+.finished,
+.addItem,
+.confirm,
+.cancel {
+  font-family: "Lato", sans-serif;
+  display: flex;
+  align-items: center;
+  border-radius: .5em;
+  margin-top: 1rem;
+  padding: .5em 0.75em;
+}
+
+.total {
+  margin-top: 0;
+}
+
+ul li:last-child {
+  margin-bottom: 1rem;
+}
+
+li[data-order="1"] {
+  margin-top: 0;
+}
+
+li, .total {
+  justify-content: space-between;
+}
+
+li,
+.total,
+.addItem {
+  background: var(--background-color);
+  box-shadow: var(--reg-box-shadow);
+}
+
+:is(li, .total, .add, .complete, .edit, .finished):focus {
+  box-shadow: var(--focus-box-shadow);
+  outline: none;
+}
+
+.price_footer {
+  -webkit-transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.addItem {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  width: 85vw;
+  max-width: 35rem;
+  flex-direction: column;
+  align-items: flex-start;
+  -webkit-transition: opacity 250ms ease-out;
+  transition: opacity 250ms ease-out;
+  opacity: 0;
+}
+
+.addItem > h1 {
+  font-size: 1rem;
+  font-style: normal;
+  color: var(--add-item-text-color);
+}
+
+.addItem > h1:last-of-type {
+  margin-top: .5rem;
+}
+
+.finished {
+  justify-content: center;
+}
+
+.finished,
+.add {
+  height: 2rem;
+  aspect-ratio: 3;
+  border-radius: 1rem;
+  background: #00000030;
+  color: var(--font-color);
+}
+
+.add {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.complete,
+.edit,
+.cancel,
+.confirm {
+  justify-content: center;
+  color: #fff;
+}
+
+.cancel {
+  background: #888;
+  width: 47.5%;
+}
+
+.confirm {
+  background: #006AFF;
+  width: 47.5%;
+}
+
+.complete {
+  background: #006AFF;
+  width: 67.5%;
+}
+
+.edit {
+  background: #888;
+  width: 30%;
+}
+
+.edit > h1,
+.finished > h1 {
+  font-style: normal;
+}
+
+.finished > h1 {
+  font-size: .75rem;
+}
+
+.footer_items,
+.footer,
+.controls {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.footer_items {
+  margin-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+.controls {
+  opacity: 0;
+  margin-bottom: -3rem;
+  -webkit-transition: margin-bottom 125ms ease-out, opacity 125ms ease-out;
+  transition: margin-bottom 125ms ease-out, opacity 125ms ease-out;
+  width: 75vw;
+  max-width: 30rem;
+}
+
+.controls.show {
+  margin-bottom: 1rem;
+}
+
+.addItem.show,
+.controls.show {
+  opacity: 1;
+}
+
+.remove.show {
+  opacity: 1;
+}
+
+.order {
+  -webkit-transition: margin-top 500ms ease-out, opacity 250ms ease-out !important;
+  transition: margin-top 500ms ease-out, opacity 250ms ease-out !important;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.remove {
+  background: #0000001f;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translate(40%,-35%);
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  -webkit-transition: opacity 125ms ease-out;
+  transition: opacity 125ms ease-out;
+}
+
+.remove::before, .remove::after {
+  content: ' ';
+  width: 50%;
+  height: 10%;
+  background: var(--font-color);
+  position: absolute;
+  border-radius: .1rem;
+  transform: rotate(45deg);
+}
+
+.remove::after {
+  transform: rotate(-45deg);
+}
+
+.add::before, .add::after {
+  content: ' ';
+  aspect-ratio: 7.5;
+  height: 7.25%;
+  background: currentColor;
+  position: absolute;
+  border-radius: .1rem;
+}
+
+.add::after {
+  transform: rotate(90deg);
+}
+
+.decrement, .increment {
+  width: 3rem;
+  height: 3rem;
+  background: #0000000a;
+  position: relative;
+  display: grid;
+  place-items: center;
+  border-radius: 20%;
+}
+
+.quantity {
+  display: flex;
+  align-items: center;
+}
+
+[name="Quantity"], .increment {
+  margin-left: .5rem;
+}
+
+.decrement::before, .increment::before, .increment::after {
+  content: ' ';
+  width: 50%;
+  height: 10%;
+  background: var(--font-color);
+  position: absolute;
+  border-radius: .15rem;
+}
+
+.increment::after {
+  transform: rotate(90deg);
+}
+
+button {
+  cursor: pointer;
+}
+
+[name="Quantity"],
+#total,
+.complete,
+.decrement,
+.increment {
+  -webkit-transition: opacity 125ms ease-out;
+  transition: opacity 125ms ease-out;
+}
+
+.fadeout {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hidden {
+  display: none;
+}
+
+input,
+textarea,
+button {
+  border: none;
+}
+
+input[type='text'],
+input[type='number'],
+textarea {
+  font-size: 1.5rem;
+  font-weight: 700;
+  border-radius: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: var(--font-color);
+  background: transparent;
+}
+
+input:not(#total, #item, #price) {
+  text-align: center;
+  width: 4ch;
+}
+
+input#total {
+  width: 10ch;
+  text-align: right;
+  font-size: 1.75rem
+}
+
+input#item,
+input#price {
+  width: 90%;
+  background: var(--input-background);
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: .25rem;
+  font-size: 1.5rem;
+  padding: .25em .5em;
+  font-weight: 700;
+  -webkit-box-shadow: var(--input-box-shadow);
+  box-shadow: var(--input-box-shadow);
+}
+
+input:focus,
+button:focus {
+  outline: black;
+  appearance: none;
+}
+
+input:focus,
+button:focus {
+  box-shadow: var(--focus-box-shadow)
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button, 
+input[type="number"]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+*::selection {
+  background: #333;
+  color: #fff;
+}
+
+@media screen and (max-width: 950px) and (orientation: portrait) {
+  
+  h1,
+  h2 {
+    margin-block-start: .25em;
+    font-size: 1.25rem
+  }
+
+  .footer_items,
+  .footer h1,
+  .controls h1 {
+    margin-block-start: revert;
+  }
+
+  h2 {
+    font-size: 1rem;
+  }
+
+  input#total {
+    margin-bottom: 5px;
+  }
+
+  .quantity {
+    margin-bottom: 5px;
+  }
+
+  li, .total {
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  input#total {
+    text-align: left;
+    padding-left: 0;
+    font-size: 1.75rem
+  }
+
+  .order:not(.show) {
+    margin-top: calc(-1rem * var(--num-of-items) * 7.15 - 1rem) !important;
+  }
+}
